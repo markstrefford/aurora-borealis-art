@@ -1,3 +1,11 @@
+"""
+Initial DCGAN implementation
+
+Based on https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
+
+Repurposed to use Aurora Borealis images instead
+
+"""
 from __future__ import print_function
 #%matplotlib inline
 import argparse
@@ -50,7 +58,7 @@ ngf = 64
 ndf = 64
 
 # Number of training epochs
-num_epochs = 5
+num_epochs = 20
 
 # Learning rate for optimizers
 lr = 0.0002
