@@ -33,8 +33,8 @@ random.seed(manualSeed)
 torch.manual_seed(manualSeed)
 
 # Root directory for dataset
-dataroot = 'images/base'
-# dataroot = 'images/base/img_align_celeba'
+# dataroot = 'images/base'
+dataroot = 'images/img_align_celeba'
 
 # Number of workers for dataloader
 workers = 2
