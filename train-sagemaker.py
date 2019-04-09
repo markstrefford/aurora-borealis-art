@@ -23,7 +23,7 @@ import torchvision.utils as vutils
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from IPython.display import HTML
+# from IPython.display import HTML
 
 
 # custom weights initialization called on netG and netD
@@ -316,12 +316,12 @@ if __name__ =='__main__':
 
     # Visualisation of G's progression
     # TODO - Save to S3
-    fig = plt.figure(figsize=(8, 8))
-    plt.axis("off")
-    ims = [[plt.imshow(np.transpose(i, (1, 2, 0)), animated=True)] for i in img_list]
-    ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
-
-    HTML(ani.to_jshtml())
+    # fig = plt.figure(figsize=(8, 8))
+    # plt.axis("off")
+    # ims = [[plt.imshow(np.transpose(i, (1, 2, 0)), animated=True)] for i in img_list]
+    # ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
+    #
+    # HTML(ani.to_jshtml())
 
     # Grab a batch of real images from the dataloader
     real_batch = next(iter(dataloader))
