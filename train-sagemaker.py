@@ -113,8 +113,8 @@ if __name__ =='__main__':
     # Data, model, and output directories
     parser.add_argument('--output-data-dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
-    parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TEST'])
+    parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
+    parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TESTING'])
 
     args, _ = parser.parse_known_args()
 
