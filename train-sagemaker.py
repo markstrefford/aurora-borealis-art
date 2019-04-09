@@ -105,37 +105,36 @@ if __name__ =='__main__':
 
     # hyperparameters sent by the client are passed as command-line arguments to the script.
     parser.add_argument('--epochs', type=int, default=50)
-    parser.add_argument('--batch-size', type=int, default=128)
-    parser.add_argument('--learning-rate', type=float, default=0.0002)
+    parser.add_argument('--lr', type=float, default=0.0002)
     parser.add_argument('--beta1', type=float, default=0.5)
-    parser.add_argument('--use-cuda', type=bool, default=True)
+    parser.add_argument('--use_cuda', type=bool, default=True)
     # TODO: manualSeed = random.randint(1, 10000) # use if you want new results
-    parser.add_argument('--manual-seed', type=int, default=999)
+    parser.add_argument('--manual_seed', type=int, default=999)
 
     # Data, model, and output directories
-    parser.add_argument('--output-data-dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
-    parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+    parser.add_argument('--output_data_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
+    parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
     # parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
     # parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TESTING'])
     # From https://github.com/awslabs/amazon-sagemaker-examples/blob/master/sagemaker-python-sdk/pytorch_cnn_cifar10/pytorch_local_mode_cifar10.ipynb
     env = sagemaker_containers.training_env()
-    parser.add_argument('--data-dir', type=str, default=env.channel_input_dirs.get('training'))
+    parser.add_argument('--data_dir', type=str, default=env.channel_input_dirs.get('training'))
 
     args, _ = parser.parse_known_args()
 
     # Set random seem for reproducibility
-    random.seed(args['manualSeed'])
-    torch.manual_seed(args['manualSeed'])
+    random.seed(args.manual_seed)
+    torch.manual_seed(args.manual_seed)
 
     # Root directory for dataset
     # dataroot = 'images/base'
-    dataroot = args['data-dir']  # args['train']
+    dataroot = args.data_dir  # args['train']
 
     # Number of workers for dataloader
     workers = 2
 
     # Batch size during training
-    batch_size = args['batch-size']
+    batch_size = args.batch_size # ['batch-size']
 
     # Spatial size of training images. All images will be resized to this
     #   size using a transformer.
@@ -154,13 +153,13 @@ if __name__ =='__main__':
     ndf = 64
 
     # Number of training epochs
-    num_epochs = args['epochs']
+    num_epochs = args.epochs
 
     # Learning rate
-    lr = args['lr']
+    lr = args.lr
 
     # Beta1 hyperparam for Adam optimizers
-    beta1 = args['beta1']
+    beta1 = args.beta1
 
     # Number of GPUs available. Use 0 for CPU mode.
     ngpu = 1
