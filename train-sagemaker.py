@@ -110,6 +110,8 @@ if __name__ =='__main__':
     parser.add_argument('--use_cuda', type=bool, default=True)
     # TODO: manualSeed = random.randint(1, 10000) # use if you want new results
     parser.add_argument('--manual_seed', type=int, default=999)
+    parser.add_argument('--batch_size', type=int, default=64)
+
 
     # Data, model, and output directories
     parser.add_argument('--output_data_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
