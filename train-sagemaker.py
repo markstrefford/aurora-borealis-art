@@ -134,6 +134,10 @@ if __name__ =='__main__':
     # dataroot = 'images/base'
     dataroot = args.data_dir  # args['train']
 
+    model_netG_path = os.path.join(args.model_dir, 'model_netG.pth')
+    model_netD_path = os.path.join(args.model_dir, 'model_netD.pth')
+    checkpoint_state_path = os.path.join(args.output_data_dir, 'model_info.pth')
+
     # Number of workers for dataloader
     workers = 2
 
@@ -236,6 +240,7 @@ if __name__ =='__main__':
     G_losses = []
     D_losses = []
     iters = 0
+    best_state = None
 
     print("Starting Training Loop...")
     # For each epoch
@@ -299,6 +304,25 @@ if __name__ =='__main__':
                 print('[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
                       % (epoch, num_epochs, i, len(dataloader),
                          errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
+            if not best_state or errG < best_state['errG']:
+                best_state = {
+                    'epoch': epoch,
+                    'lr': lr,
+                    'errD': errD.item(),
+                    'errG': errG.item(),
+                    'D_x': D_x,
+                    'D_G_z1': D_G_z1,
+                    'D_G_z2': D_G_z2
+                    # 'val_loss': val_loss,
+                    # 'val_ppl': math.exp(val_loss),
+                }
+                with open(checkpoint_state_path, 'w') as f:
+                    f.write('epoch {:3d} | lr: {:5.2f} | [%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
+                      % (epoch, num_epochs, i, len(dataloader),
+                         errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
+            # else:
+            #     # Anneal the learning rate if no improvement has been seen in the validation dataset.
+            #     lr /= 4.0
 
             # Save Losses for plotting later
             G_losses.append(errG.item())
@@ -311,6 +335,12 @@ if __name__ =='__main__':
                 img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
             iters += 1
+
+    print('Saving final model: {}'.format(best_state))
+    with open(model_netG_path, 'wb') as f:
+        torch.save(netG.state_dict(), f)
+    with open(model_netD_path, 'wb') as f:
+        torch.save(netD.state_dict(), f)
 
     # Plot Loss vs training iteration
     # TODO - Save to S3
@@ -350,9 +380,9 @@ if __name__ =='__main__':
     # plt.imshow(np.transpose(img_list[-1],(1,2,0)))
     # plt.show()
 
-    np.save('training_loss_g', G_losses)
-    np.save('training_loss_d', D_losses)
-    np.save('generated_images', np.transpose(img_list[-1], (1, 2, 0)))
+    np.save(os.path.join(args.model_dir, 'training_loss_g'), G_losses)
+    np.save(os.path.join(args.model_dir, 'training_loss_d'), D_losses)
+    np.save(os.path.join(args.model_dir, 'generated_images'), np.transpose(img_list[-1], (1, 2, 0)))
 
 
 
