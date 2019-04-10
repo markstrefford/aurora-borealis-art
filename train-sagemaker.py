@@ -119,10 +119,12 @@ if __name__ =='__main__':
     # parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
     # parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TESTING'])
     # From https://github.com/awslabs/amazon-sagemaker-examples/blob/master/sagemaker-python-sdk/pytorch_cnn_cifar10/pytorch_local_mode_cifar10.ipynb
-    env = sagemaker_containers.training_env()
-    parser.add_argument('--data_dir', type=str, default=env.channel_input_dirs.get('training'))
-
+    # env = sagemaker_containers.training_env()
+    # parser.add_argument('--data_dir', type=str, default=env.channel_input_dirs.get('training'))
+    parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
+    
     args, _ = parser.parse_known_args()
+    print('args: {}'.format(args))
 
     # Set random seem for reproducibility
     random.seed(args.manual_seed)
@@ -167,6 +169,7 @@ if __name__ =='__main__':
     ngpu = 1
 
     # Create the dataset
+    print('dataroot={}'.format(dataroot))
     dataset = dset.ImageFolder(root=dataroot,
                                transform=transforms.Compose([
                                    transforms.Resize(image_size),
