@@ -65,7 +65,8 @@ class Generator(nn.Module):
             nn.ReLU(True),
 
             # state size. (ngf) x 32 x 32
-            nn.ConvTranspose2d( ngf, nc, 4, 2, 1, bias=False),
+            # nn.ConvTranspose2d( ngf, nc, 4, 2, 1, bias=False),
+            nn.ConvTranspose2d(image_size, nc, 4, 2, 1, bias=False),
             nn.Tanh()
             # state size. (nc) x 64 x 64
         )
@@ -125,7 +126,8 @@ class Discriminator(nn.Module):
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is (nc) x 64 x 64
-            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+            # nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+            nn.Conv2d(nc, image_size, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
 
             # state size. (ndf) x 32 x 32
