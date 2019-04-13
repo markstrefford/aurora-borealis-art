@@ -72,39 +72,44 @@ class Generator(nn.Module):
 
         self.main = nn.Sequential(
             # L1: input is Z, going into a convolution
-            nn.ConvTranspose2d(nz, ngf * 64, 4, 1, 0, bias=False),
-            nn.BatchNorm2d(ngf * 64),
-            nn.ReLU(True),
+            # nn.ConvTranspose2d(nz, ngf * 64, 4, 1, 0, bias=False),
+            # nn.BatchNorm2d(ngf * 64),
+            # nn.ReLU(True),
 
-            # L2: state size. (ngf*64) x 4 x 4
-            nn.ConvTranspose2d(ngf * 64, ngf * 32, 4, 2, 1, bias=False),
+            # L1: input is Z, going into a convolution
+            nn.ConvTranspose2d(nz, ngf * 32, 4, 1, 0, bias=False),
             nn.BatchNorm2d(ngf * 32),
             nn.ReLU(True),
 
-            # l3: state size. (ngf*32) x 8 x 8
+            # # L2: state size. (ngf*64) x 4 x 4
+            # nn.ConvTranspose2d(ngf * 64, ngf * 32, 4, 2, 1, bias=False),
+            # nn.BatchNorm2d(ngf * 32),
+            # nn.ReLU(True),
+
+            # l2: state size. (ngf*32) x 8 x 8
             nn.ConvTranspose2d( ngf * 32, ngf * 16, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 16),
             nn.ReLU(True),
 
-            # L4: state size. (ngf*16) x 16 x 16
+            # L3: state size. (ngf*16) x 16 x 16
             nn.ConvTranspose2d( ngf * 16, ngf * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
 
-            # L5: state size. (ngf*8) x 32 x 32
+            # L4: state size. (ngf*8) x 32 x 32
             nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 4),
             nn.ReLU(True),
 
-            # L6: state size. (ngf*4) x 64 x 64
+            # L5: state size. (ngf*4) x 64 x 64
             nn.ConvTranspose2d(ngf * 4, ngf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 2),
 
-            # L7: state size. (ngf*4) x 64 x 64
+            # L6: state size. (ngf*4) x 64 x 64
             nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf),
 
-            # L8: state size. (ngf) x 128 x 128
+            # L7: state size. (ngf) x 128 x 128
             nn.ConvTranspose2d(ngf, nc, 4, 2, 1, bias=False),
             nn.Tanh()
             # state size. (nc) x 256 x 256
@@ -172,14 +177,18 @@ class Discriminator(nn.Module):
             nn.BatchNorm2d(ndf * 32),
             nn.LeakyReLU(0.2, inplace=True),
 
+            # L7: state size. (ndf*32) x 4 x 4
+            nn.Conv2d(ndf * 32, 1, 4, 1, 0, bias=False),
+            nn.Sigmoid()
+
             # L7: state size. (ndf * 32) x 8 x 8
-            nn.Conv2d(ndf * 32, ndf * 64, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 64),
-            nn.LeakyReLU(0.2, inplace=True),
+            # nn.Conv2d(ndf * 32, ndf * 64, 4, 2, 1, bias=False),
+            # nn.BatchNorm2d(ndf * 64),
+            # nn.LeakyReLU(0.2, inplace=True),
 
             # L8: state size. (ndf*64) x 4 x 4
-            nn.Conv2d(ndf * 64, 1, 4, 1, 0, bias=False),
-            nn.Sigmoid()
+            # nn.Conv2d(ndf * 64, 1, 4, 1, 0, bias=False),
+            # nn.Sigmoid()
         )
 
     def forward(self, input):
@@ -233,7 +242,7 @@ if __name__ =='__main__':
 
     # Spatial size of training images. All images will be resized to this
     #   size using a transformer.
-    image_size = 256 # 64
+    image_size = 128 # 64
 
     # Number of channels in the training images. For color images this is 3
     nc = 3
@@ -242,10 +251,10 @@ if __name__ =='__main__':
     nz = 100
 
     # Size of feature maps in generator
-    ngf = 256
+    ngf = 128
 
     # Size of feature maps in discriminator
-    ndf = 256
+    ndf = 128
 
     # Number of training epochs
     num_epochs = args.epochs
