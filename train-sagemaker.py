@@ -252,7 +252,7 @@ if __name__ =='__main__':
 
     # Spatial size of training images. All images will be resized to this
     #   size using a transformer.
-    image_size = 128 # 64
+    image_size = 64 # 64
 
     # Number of channels in the training images. For color images this is 3
     nc = 3
@@ -261,10 +261,10 @@ if __name__ =='__main__':
     nz = 100
 
     # Size of feature maps in generator
-    ngf = 128  # 128
+    ngf = 64  # 128
 
     # Size of feature maps in discriminator
-    ndf = 128  # 128
+    ndf = 54  # 128
 
     # Number of training epochs
     num_epochs = args.epochs
