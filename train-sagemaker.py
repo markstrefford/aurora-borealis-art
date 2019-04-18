@@ -264,7 +264,7 @@ if __name__ =='__main__':
     ngf = 64  # 128
 
     # Size of feature maps in discriminator
-    ndf = 54  # 128
+    ndf = 64  # 128
 
     # Number of training epochs
     num_epochs = args.epochs
