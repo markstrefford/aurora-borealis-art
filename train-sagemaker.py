@@ -252,7 +252,7 @@ if __name__ =='__main__':
 
     # Spatial size of training images. All images will be resized to this
     #   size using a transformer.
-    image_size = 64 # 64
+    image_size = 64  # 64
 
     # Number of channels in the training images. For color images this is 3
     nc = 3
@@ -490,7 +490,7 @@ if __name__ =='__main__':
 
     np.save(os.path.join(args.model_dir, 'training_loss_g'), G_losses)
     np.save(os.path.join(args.model_dir, 'training_loss_d'), D_losses)
-    np.save(os.path.join(args.model_dir, 'generated_images'), np.transpose(img_list[-1], (1, 2, 0)))
+    np.save(os.path.join(args.model_dir, 'generated_images'), np.transpose(np.array(img_list)[-1], (1, 2, 0)))
 
 
 
