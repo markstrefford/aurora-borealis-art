@@ -430,7 +430,7 @@ if __name__ =='__main__':
                 with torch.no_grad():
                     fake = netG(fixed_noise).detach().cpu()
                     print('Generated fake images of shape {}'.format(fake.shape))
-                img_list.append([fake])
+                img_list.append(fake)
                 # img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
             iters += 1
