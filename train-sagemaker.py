@@ -482,9 +482,9 @@ if __name__ =='__main__':
 
     np.save(os.path.join(args.model_dir, 'training_loss_g'), G_losses)
     np.save(os.path.join(args.model_dir, 'training_loss_d'), D_losses)
-    img_list = np.array(img_list)
-    print('img_list.shape={}'.format(img_list.shape))
-    np.save(os.path.join(args.model_dir, 'generated_images'), np.transpose(img_list[-1], (1, 2, 0)))
+    # img_list = np.array(img_list)
+    # print('img_list.shape={}'.format(img_list.shape))
+    # np.save(os.path.join(args.model_dir, 'generated_images'), np.transpose(img_list[-1], (1, 2, 0)))
 
 
 
