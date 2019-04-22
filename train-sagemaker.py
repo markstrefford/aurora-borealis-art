@@ -209,7 +209,6 @@ if __name__ =='__main__':
     parser.add_argument('--manual_seed', type=int, default=999)
     parser.add_argument('--batch_size', type=int, default=64)
 
-
     # Data, model, and output directories
     parser.add_argument('--output_data_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
@@ -426,12 +425,14 @@ if __name__ =='__main__':
             D_losses.append(errD.item())
 
             # Check how the generator is doing by saving G's output on fixed_noise
-            if (iters % 50 == 0) or ((epoch == num_epochs - 1) and (i == len(dataloader) - 1)):
-                with torch.no_grad():
-                    fake = netG(fixed_noise).detach().cpu()
-                    print('Generated fake images of shape {}'.format(fake.shape))
-                img_list.append(fake)
-                # img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
+            if i % 100 == 0:
+                vutils.save_image(real_cpu,
+                                  '%s/real_samples.png' % args.model_dir,
+                                  normalize=True)
+                fake = netG(fixed_noise)
+                vutils.save_image(fake.detach(),
+                                  '%s/fake_samples_epoch_%03d.png' % (args.model_dir, epoch),
+                                  normalize=True)
 
             iters += 1
 
