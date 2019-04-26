@@ -272,6 +272,10 @@ if __name__ =='__main__':
     print('dataroot={}'.format(dataroot))
     dataset = dset.ImageFolder(root=dataroot,
                                transform=transforms.Compose([
+                                   # transforms.FiveCrop(480),
+                                   # transforms.Lambda(lambda crops: torch.stack([transforms.ToTensor()(crop) for crop in crops])),
+                                   transforms.RandomAffine(10),
+                                   transforms.RandomHorizontalFlip(),
                                    transforms.Resize((image_size, image_size)),
                                    # transforms.CenterCrop(image_size),
                                    transforms.ToTensor(),
