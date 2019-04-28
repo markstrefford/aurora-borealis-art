@@ -144,6 +144,10 @@ def parse_arguments():
                         default=3,
                         help="number of parallel workers for reading files")
 
+    parser.add_argument("--save_real", action="store", type=bool,
+                        default=False,
+                        help="save sample real images used in training")
+
     args = parser.parse_args()
     print('args={}'.format(args))
 
@@ -251,7 +255,8 @@ def main(args):
         sample_dir=args.sample_dir,
         save_dir=args.model_dir,
         log_dir=args.model_dir,
-        start=args.start
+        start=args.start,
+        save_real=args.save_real
     )
 
 

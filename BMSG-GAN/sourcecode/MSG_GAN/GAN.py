@@ -358,7 +358,7 @@ class MSG_GAN:
               start=1, num_epochs=12, feedback_factor=10, checkpoint_factor=1,
               data_percentage=100, num_samples=36,
               log_dir=None, sample_dir="./samples",
-              save_dir="./models"):
+              save_dir="./models", save_real=False):
         """
         Method for training the network
         :param data: pytorch dataloader which iterates over images
@@ -480,6 +480,20 @@ class MSG_GAN:
                             self.gen(fixed_input) if not self.use_ema
                             else self.gen_shadow(fixed_input),
                             gen_img_files)
+
+                    # create a grid of real images and save it
+                    if save_real:
+                        real_img_files = [os.path.join(sample_dir, res, "real_" +
+                                                       str(epoch) + "_" +
+                                                       str(i) + ".png")
+                                          for res in reses]
+                        # Make sure all the required directories exist
+                        # otherwise make them
+                        os.makedirs(sample_dir, exist_ok=True)
+                        for real_img_file in real_img_files:
+                            os.makedirs(os.path.dirname(real_img_file), exist_ok=True)
+
+                        self.create_grid(images, real_img_files)
 
                 # increment the global_step:
                 global_step += 1
