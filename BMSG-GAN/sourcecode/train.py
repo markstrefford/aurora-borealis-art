@@ -54,9 +54,9 @@ def parse_arguments():
                         default=False,
                         help="whether the images directory contains folders or not")
 
-    parser.add_argument("--flip_augment", action="store", type=bool,
+    parser.add_argument("--augment", action="store", type=bool,
                         default=True,
-                        help="whether to randomly mirror the images during training")
+                        help="whether to randomly augment the images during training")
 
     parser.add_argument("--sample_dir", action="store", type=str,
                         # default="samples/1/",
@@ -173,7 +173,7 @@ def main(args):
         args.images_dir,
         transform=get_transform((int(np.power(2, args.depth + 1)),
                                  int(np.power(2, args.depth + 1))),
-                                flip_horizontal=args.flip_augment))
+                                flip_horizontal=args.augment))
 
     data = get_data_loader(dataset, args.batch_size, args.num_workers)
     print("Total number of images in the dataset:", len(dataset))

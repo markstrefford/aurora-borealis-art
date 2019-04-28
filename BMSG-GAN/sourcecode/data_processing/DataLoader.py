@@ -140,17 +140,19 @@ class FoldersDistributedDataset(Dataset):
         return img
 
 
-def get_transform(new_size=None, flip_horizontal=False):
+def get_transform(new_size=None, augment=False):
     """
     obtain the image transforms required for the input data
+    aurora images are already flipped so perform random rotation instead
+
     :param new_size: size of the resized images
-    :param flip_horizontal: Whether to randomly mirror input images during training
+    :param augment: Whether to randomly rotate input images during training
     :return: image_transform => transform object from TorchVision
     """
     from torchvision.transforms import ToTensor, Normalize, Compose, Resize, \
         RandomHorizontalFlip, RandomAffine
 
-    if not flip_horizontal:
+    if not augment:
         if new_size is not None:
             image_transform = Compose([
                 Resize(new_size),
@@ -168,7 +170,7 @@ def get_transform(new_size=None, flip_horizontal=False):
     else:
         if new_size is not None:
             image_transform = Compose([
-                RandomHorizontalFlip(p=0.5),
+                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 Resize(new_size),
                 ToTensor(),
@@ -177,7 +179,7 @@ def get_transform(new_size=None, flip_horizontal=False):
 
         else:
             image_transform = Compose([
-                RandomHorizontalFlip(p=0.5),
+                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
