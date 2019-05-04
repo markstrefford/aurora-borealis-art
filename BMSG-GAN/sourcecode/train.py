@@ -173,7 +173,7 @@ def main(args):
         args.images_dir,
         transform=get_transform((int(np.power(2, args.depth + 1)),
                                  int(np.power(2, args.depth + 1))),
-                                flip_horizontal=args.augment))
+                                augment=args.augment))
 
     data = get_data_loader(dataset, args.batch_size, args.num_workers)
     print("Total number of images in the dataset:", len(dataset))
