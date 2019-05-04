@@ -223,6 +223,7 @@ class MSG_GAN:
 
     def __init__(self, depth=7, latent_size=512,
                  use_eql=True, use_ema=True, ema_decay=0.999,
+                 th_low=0.45, th_high=0.8,
                  device=th.device("cpu")):
         """ constructor for the class """
         from torch.nn import DataParallel
@@ -240,6 +241,8 @@ class MSG_GAN:
         # state of the object
         self.use_ema = use_ema
         self.ema_decay = ema_decay
+        self.th_low = th_low
+        self.th_high = th_high
         self.use_eql = use_eql
         self.latent_size = latent_size
         self.depth = depth
@@ -279,7 +282,7 @@ class MSG_GAN:
 
         return generated_images
 
-    def optimize_discriminator(self, dis_optim, noise, real_batch, loss_fn):
+    def optimize_discriminator(self, dis_optim, noise, real_batch, loss_fn, gen_loss):
         """
         performs one step of weight update on discriminator using the batch of data
         :param dis_optim: discriminator optimizer
@@ -295,11 +298,17 @@ class MSG_GAN:
         fake_samples = list(map(lambda x: x.detach(), fake_samples))
 
         loss = loss_fn.dis_loss(real_batch, fake_samples)
-
+        dis_loss = loss.item()
         # optimize discriminator
-        dis_optim.zero_grad()
-        loss.backward()
-        dis_optim.step()
+        # From http://blog.otoro.net/2016/04/01/generating-large-images-from-latent-vectors
+        # "...calculate D’s loss function first, and only perform gradient descent on D if G’s loss function is less
+        # than some upper bound (so it is relatively not that weak against D in the first place),
+        # and also if D’s loss function is greater than some lower bound (so that it is not relatively that strong
+        # versus G). We have tried to use an upper bound of 0.80 and a lower bound of 0.45."
+        if gen_loss < self.th_high and dis_loss > self.th_low:
+            dis_optim.zero_grad()
+            loss.backward()
+            dis_optim.step()
 
         return loss.item()
 
@@ -319,7 +328,7 @@ class MSG_GAN:
 
         loss = loss_fn.gen_loss(real_batch, fake_samples)
 
-        # optimize discriminator
+        # optimize generator
         gen_optim.zero_grad()
         loss.backward()
         gen_optim.step()
@@ -406,6 +415,10 @@ class MSG_GAN:
         global_time = time.time()
         global_step = 0
 
+        # See http://blog.otoro.net/2016/04/01/generating-large-images-from-latent-vectors/ and comments in
+        # optimize_discriminator() above
+        gen_loss = 0
+
         for epoch in range(start, num_epochs + 1):
             start_time = timeit.default_timer()  # record time at the start of epoch
 
@@ -437,7 +450,7 @@ class MSG_GAN:
 
                 # optimize the discriminator:
                 dis_loss = self.optimize_discriminator(dis_optim, gan_input,
-                                                       images, loss_fn)
+                                                       images, loss_fn, gen_loss)
 
                 # optimize the generator:
                 gen_loss = self.optimize_generator(gen_optim, gan_input,
