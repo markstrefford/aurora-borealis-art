@@ -305,7 +305,7 @@ class MSG_GAN:
         # than some upper bound (so it is relatively not that weak against D in the first place),
         # and also if D’s loss function is greater than some lower bound (so that it is not relatively that strong
         # versus G). We have tried to use an upper bound of 0.80 and a lower bound of 0.45."
-        print('gen_loss={}, self.th_high={} : {} and dis_loss={}, self.th_low={} : {}'.format(
+        print('gen_loss={} < self.th_high={} : {} and dis_loss={} > self.th_low={} : {}'.format(
             gen_loss, self.th_high, gen_loss < self.th_high, dis_loss, self.th_low, dis_loss > self.th_low
         ))
         if gen_loss < self.th_high and dis_loss > self.th_low:
