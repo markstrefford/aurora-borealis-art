@@ -3,7 +3,6 @@
 import os
 import numpy as np
 from torch.utils.data import Dataset
-from torch import stack
 
 
 class FlatDirectoryImageDataset(Dataset):
@@ -141,47 +140,48 @@ class FoldersDistributedDataset(Dataset):
         return img
 
 
-def get_transform(new_size=None, augment=False, crop_size=200):
+def get_transform(new_size=None, augment=False):
     """
     obtain the image transforms required for the input data
     aurora images are already flipped so perform random rotation instead
 
     :param new_size: size of the resized images
-    :param augment: Whether to randomly rotate input images during training
-    :param crop_size: Crop size for FiveCrop (TODO: How to determine this scales with image sizes?)
+    :param augment: Whether to randomly mirror input images during training
     :return: image_transform => transform object from TorchVision
     """
     from torchvision.transforms import ToTensor, Normalize, Compose, Resize, \
-        RandomHorizontalFlip, RandomAffine, Lambda, FiveCrop
+        RandomHorizontalFlip, RandomAffine
 
     if not augment:
         if new_size is not None:
             image_transform = Compose([
                 Resize(new_size),
+                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
         else:
             image_transform = Compose([
+                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
     else:
         if new_size is not None:
             image_transform = Compose([
+                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 Resize(new_size),
-                FiveCrop(crop_size),
-                Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
+                ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
         else:
             image_transform = Compose([
+                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
-                FiveCrop(crop_size),
-                Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
+                ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
