@@ -13,6 +13,7 @@ def read_loss_log(file_name, delimiter='\t'):
     """
     from numpy import genfromtxt
     losses = genfromtxt(file_name, delimiter=delimiter)
+    print(losses)
     return losses
 
 
@@ -81,7 +82,7 @@ def main(args):
     loss_vals = read_loss_log(args.loss_file)
 
     # plot the loss:
-    plot_loss(loss_vals[:, 0], loss_vals[:, 1], save_path=args.plot_file)
+    plot_loss(loss_vals[:, 1], loss_vals[:, 2], save_path=args.plot_file)
 
     print("Loss plots have been successfully generated ...")
     print("Please check: ", args.plot_file)

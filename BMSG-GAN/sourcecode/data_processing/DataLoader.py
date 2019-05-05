@@ -3,6 +3,7 @@
 import os
 import numpy as np
 from torch.utils.data import Dataset
+from torch import stack
 
 
 class FlatDirectoryImageDataset(Dataset):
@@ -150,38 +151,36 @@ def get_transform(new_size=None, augment=False):
     :return: image_transform => transform object from TorchVision
     """
     from torchvision.transforms import ToTensor, Normalize, Compose, Resize, \
-        RandomHorizontalFlip, RandomAffine
+        RandomHorizontalFlip, RandomAffine, Lambda, FiveCrop
 
     if not augment:
         if new_size is not None:
             image_transform = Compose([
                 Resize(new_size),
-                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
         else:
             image_transform = Compose([
-                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
     else:
         if new_size is not None:
             image_transform = Compose([
-                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 Resize(new_size),
-                ToTensor(),
+                FiveCrop(480),
+                Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
         else:
             image_transform = Compose([
-                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
-                ToTensor(),
+                FiveCrop(480),
+                Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
