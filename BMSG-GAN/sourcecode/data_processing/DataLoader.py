@@ -141,13 +141,14 @@ class FoldersDistributedDataset(Dataset):
         return img
 
 
-def get_transform(new_size=None, augment=False):
+def get_transform(new_size=None, augment=False, crop_size=200):
     """
     obtain the image transforms required for the input data
     aurora images are already flipped so perform random rotation instead
 
     :param new_size: size of the resized images
     :param augment: Whether to randomly rotate input images during training
+    :param crop_size: Crop size for FiveCrop (TODO: How to determine this scales with image sizes?)
     :return: image_transform => transform object from TorchVision
     """
     from torchvision.transforms import ToTensor, Normalize, Compose, Resize, \
@@ -171,7 +172,7 @@ def get_transform(new_size=None, augment=False):
             image_transform = Compose([
                 RandomAffine(10),
                 Resize(new_size),
-                FiveCrop(480),
+                FiveCrop(crop_size),
                 Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
@@ -179,7 +180,7 @@ def get_transform(new_size=None, augment=False):
         else:
             image_transform = Compose([
                 RandomAffine(10),
-                FiveCrop(480),
+                FiveCrop(crop_size),
                 Lambda(lambda crops: stack([ToTensor()(crop) for crop in crops])),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
