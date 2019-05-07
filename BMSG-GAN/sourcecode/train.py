@@ -54,7 +54,7 @@ def parse_arguments():
                         default=False,
                         help="whether the images directory contains folders or not")
 
-    parser.add_argument("--augment", action="store", type=bool,
+    parser.add_argument("--augment_images", action="store", type=bool,
                         default=False,
                         help="whether to randomly augment the images during training")
 
@@ -177,7 +177,7 @@ def main(args):
         args.images_dir,
         transform=get_transform((int(np.power(2, args.depth + 1)),
                                  int(np.power(2, args.depth + 1))),
-                                augment=args.augment))
+                                augment_images=args.augment_images))
 
     data = get_data_loader(dataset, args.batch_size, args.num_workers)
     print("Total number of images in the dataset:", len(dataset))
