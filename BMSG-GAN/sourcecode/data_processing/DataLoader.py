@@ -152,8 +152,11 @@ def get_transform(new_size=None, augment=False):
     from torchvision.transforms import ToTensor, Normalize, Compose, Resize, \
         RandomHorizontalFlip, RandomAffine
 
+    print('get_transform(): new_size={}, augment={}'.format(new_size, augment))
+
     if not augment:
         if new_size is not None:
+            print('get_transform(): A')
             image_transform = Compose([
                 Resize(new_size),
                 ToTensor(),
@@ -161,12 +164,14 @@ def get_transform(new_size=None, augment=False):
             ])
 
         else:
+            print('get_transform(): B')
             image_transform = Compose([
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
     else:
         if new_size is not None:
+            print('get_transform(): C')
             image_transform = Compose([
                 RandomAffine(10),
                 Resize(new_size),
@@ -175,6 +180,7 @@ def get_transform(new_size=None, augment=False):
             ])
 
         else:
+            print('get_transform(): D')
             image_transform = Compose([
                 RandomAffine(10),
                 ToTensor(),
