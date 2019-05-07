@@ -223,7 +223,7 @@ class MSG_GAN:
 
     def __init__(self, depth=7, latent_size=512,
                  use_eql=True, use_ema=True, ema_decay=0.999,
-                 th_low=0.45, th_high=0.8,
+                 th_low=0.45, th_high=0.8, dis_optimize_always=False,
                  device=th.device("cpu")):
         """ constructor for the class """
         from torch.nn import DataParallel
@@ -243,6 +243,7 @@ class MSG_GAN:
         self.ema_decay = ema_decay
         self.th_low = th_low
         self.th_high = th_high
+        self.dis_optimize_always = dis_optimize_always
         self.use_eql = use_eql
         self.latent_size = latent_size
         self.depth = depth
@@ -310,7 +311,7 @@ class MSG_GAN:
         #     gen_loss, self.th_high, gen_loss < self.th_high, dis_loss, self.th_low, dis_loss > self.th_low
         # ))
 
-        if gen_loss < self.th_high and dis_loss > self.th_low:
+        if (gen_loss < self.th_high and dis_loss > self.th_low) or self.dis_optimize_always:
             # print('Condition met to run loss.backward() for discriminator')
             dis_optim.zero_grad()
             loss.backward()

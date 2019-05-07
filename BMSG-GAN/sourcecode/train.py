@@ -58,6 +58,10 @@ def parse_arguments():
                         default=True,
                         help="whether to randomly augment the images during training")
 
+    parser.add_argument("--dis_optimize_always", action="store", type=bool,
+                        default=False,
+                        help="whether to run D backprop on each iteration or only when D & G loss within parameters")
+
     parser.add_argument("--sample_dir", action="store", type=str,
                         # default="samples/1/",
                         default=os.environ['SM_MODEL_DIR'],
@@ -184,6 +188,7 @@ def main(args):
                       use_eql=args.use_eql,
                       use_ema=args.use_ema,
                       ema_decay=args.ema_decay,
+                      dis_optimize_always=args.dis_optimize_always,
                       device=device)
 
     if args.generator_file is not None:

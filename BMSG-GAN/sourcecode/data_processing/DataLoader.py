@@ -156,21 +156,18 @@ def get_transform(new_size=None, augment=False):
         if new_size is not None:
             image_transform = Compose([
                 Resize(new_size),
-                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
 
         else:
             image_transform = Compose([
-                RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
             ])
     else:
         if new_size is not None:
             image_transform = Compose([
-                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 Resize(new_size),
                 ToTensor(),
@@ -179,7 +176,6 @@ def get_transform(new_size=None, augment=False):
 
         else:
             image_transform = Compose([
-                # RandomHorizontalFlip(p=0.5),
                 RandomAffine(10),
                 ToTensor(),
                 Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
