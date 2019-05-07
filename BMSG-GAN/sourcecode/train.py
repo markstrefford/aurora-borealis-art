@@ -55,7 +55,7 @@ def parse_arguments():
                         help="whether the images directory contains folders or not")
 
     parser.add_argument("--augment", action="store", type=bool,
-                        default=True,
+                        default=False,
                         help="whether to randomly augment the images during training")
 
     parser.add_argument("--dis_optimize_always", action="store", type=bool,
