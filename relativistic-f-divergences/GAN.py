@@ -175,7 +175,7 @@ if param.cuda:
 # from IPython.display import Image
 to_img = transf.ToPILImage()
 
-import pytorch_visualize as pv
+# import pytorch_visualize as pv
 
 import math
 
@@ -663,10 +663,10 @@ for i in range(iter_offset, param.n_iter):
 		del images
 		y_pred = D(x)
 
-		if param.show_graph and i == 0:
-			# Visualization of the autograd graph
-			d = pv.make_dot(y_pred, D.state_dict())
-			d.view()
+		# if param.show_graph and i == 0:
+		# 	# Visualization of the autograd graph
+		# 	d = pv.make_dot(y_pred, D.state_dict())
+		# 	d.view()
 
 		if param.loss_D in [1,2,3,4]:
 			# Train with real data
