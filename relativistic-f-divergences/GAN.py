@@ -172,7 +172,7 @@ if param.cuda:
 	cudnn.benchmark = True
 
 # To see images
-from IPython.display import Image
+# from IPython.display import Image
 to_img = transf.ToPILImage()
 
 import pytorch_visualize as pv
