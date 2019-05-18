@@ -14,6 +14,8 @@
 def strToBool(str):
 	return str.lower() in ('true', 'yes', 'on', 't', '1')
 
+import os
+import sagemaker_containers
 import argparse
 parser = argparse.ArgumentParser()
 parser.register('type', 'bool', strToBool)
@@ -34,8 +36,8 @@ parser.add_argument('--decay', type=float, default=0, help='Decay to apply to lr
 parser.add_argument('--SELU', type='bool', default=False, help='Using scaled exponential linear units (SELU) which are self-normalizing instead of ReLU with BatchNorm. Used only in arch=0. This improves stability.')
 parser.add_argument("--NN_conv", type='bool', default=False, help="This approach minimize checkerboard artifacts during training. Used only by arch=0. Uses nearest-neighbor resized convolutions instead of strided convolutions (https://distill.pub/2016/deconv-checkerboard/ and github.com/abhiskk/fast-neural-style).")
 parser.add_argument('--seed', type=int)
-parser.add_argument('--input_folder', default='/home/alexia/Datasets/Meow_64x64', help='input folder')
-parser.add_argument('--output_folder', default='/mnt/sdb2/Dropbox/Ubuntu_ML/Output/GANlosses', help='output folder')
+parser.add_argument('--input_folder', default=os.environ['SM_CHANNEL_TRAINING'], help='input folder')
+parser.add_argument('--output_folder', default=os.environ['SM_MODEL_DIR'], help='output folder')
 parser.add_argument('--inception_folder', default='/home/alexia/Inception', help='Inception model folder (path must exists already, model will be downloaded automatically)')
 parser.add_argument('--load', default=None, help='Full path to network state to load (ex: /home/output_folder/run-5/models/state_11.pth)')
 parser.add_argument('--cuda', type='bool', default=True, help='enables cuda')
@@ -49,7 +51,7 @@ parser.add_argument('--spectral_G', type='bool', default=False, help='If True, u
 parser.add_argument('--weight_decay', type=float, default=0, help='L2 regularization weight. Helps convergence but leads to artifacts in images, not recommended.')
 parser.add_argument('--gen_extra_images', type=int, default=50000, help='Generate additional images with random fake cats in calculating FID (Recommended to use the same amount as the size of the dataset; for CIFAR-10 we use 50k, but most people use 10k) It must be a multiple of 100.')
 parser.add_argument('--gen_every', type=int, default=100000, help='Generate additional images with random fake cats every x iterations. Used in calculating FID.')
-parser.add_argument('--extra_folder', default='/home/alexia/Output/Extra', help='Folder for extra photos (different so that my dropbox does not get overwhelmed with 50k pictures)')
+parser.add_argument('--extra_folder', default=os.environ['SM_MODEL_DIR'], help='Folder for extra photos (different so that my dropbox does not get overwhelmed with 50k pictures)')
 parser.add_argument('--show_graph', type='bool', default=False, help='If True, show gradients graph. Really neat for debugging.')
 parser.add_argument('--no_batch_norm_G', type='bool', default=False, help='If True, no batch norm in G.')
 parser.add_argument('--no_batch_norm_D', type='bool', default=False, help='If True, no batch norm in D.')
