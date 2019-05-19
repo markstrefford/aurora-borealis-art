@@ -181,7 +181,7 @@ import math
 
 torch.utils.backcompat.broadcast_warning.enabled=True
 
-from fid import calculate_fid_given_paths as calc_fid
+#from fid import calculate_fid_given_paths as calc_fid
 #from inception import get_inception_score
 #from inception import load_images
 
